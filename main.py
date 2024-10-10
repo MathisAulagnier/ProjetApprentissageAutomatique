@@ -4,7 +4,7 @@ from id3 import ID3
 
 
 # Test de la classe ID3
-arbre = ID3(depth_limit=3, nom_colonne_classe="variety")
+arbre = ID3(depth_limit=3,nom_colonne_classe="variety")
 #arbre = ID3( nom_colonne_classe="admission", seuil_gini=0.0001, seuil_discretisation=10)
 arbre.show_tree()
 

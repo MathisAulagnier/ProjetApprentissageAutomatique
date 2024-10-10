@@ -20,7 +20,7 @@ from sklearn.impute import (
 
 
 class ID3:
-    def __init__(self, depth_limit=None, nom_colonne_classe='admission', seuil_gini=0.05, seuil_discretisation=10):
+    def __init__(self, depth_limit=None, nom_colonne_classe='admission', seuil_gini=0.05, seuil_discretisation=10, number_bins=10):
         """
         Initialise l'arbre avec une limite de profondeur facultative.
         """
@@ -31,6 +31,7 @@ class ID3:
         self.moyennes = {}
         self.manquantes = {}
         self.model_discretisation = {}
+        self.num_bins = number_bins
         self.tree = None
     
     
@@ -40,16 +41,26 @@ class ID3:
         X: Ensemble d'attributs (Pandas DataFrame)
         y: Classes cibles (Pandas Series ou array-like)
         """
+        # Si Nom de la classe n'est pas présent dans le DataFrame, on renvoie une erreur
+        if self.nom_colonne_classe not in df.columns:
+            raise ValueError("ERREUR : La colonne candidate pour être le Label n'est pas présente dans ce DataFrame.")
+
+        # Si le type de la colonne classe n'est pas object, on renvoie une erreur
+        if df[self.nom_colonne_classe].dtype != 'object':
+            raise ValueError("ERREUR : La colonne candidate pour être le Label n'est pas de type 'object'.")
+
         X = df.drop(self.nom_colonne_classe, axis=1)
         y = df[self.nom_colonne_classe]
 
         # Appelle la méthode récursive pour construire l'arbre
         X = self.discretize(X, entrainement_en_cours=True)
+
         # Convertir les NaN en 'Valeur manquante'
         if y.dtype == 'object':
             y = y.fillna('Etiquette manquante')
         else:
             y = y.fillna(y.max() + 1)
+        
         self.tree = self.build_tree(X, y, depth=0)
 
 
@@ -139,7 +150,7 @@ class ID3:
             # Crée des pipelines pour chaque type de donnée
             numeric_pipeline = Pipeline([
                 ('imputer', SimpleImputer(strategy='mean')),  # Imputation des valeurs manquantes par la moyenne ## Réfléchir à une autre stratégie a passer en option
-                ('discretizer', KBinsDiscretizer(n_bins=10, encode='ordinal', strategy='uniform', subsample=None))  # Discrétisation # Proposer en option de choisir le nombre de bins et la stratégie
+                ('discretizer', KBinsDiscretizer(n_bins=self.num_bins , encode='ordinal', strategy='uniform', subsample=None))  # Discrétisation # Proposer en option de choisir le nombre de bins et la stratégie
             ])
 
             categorical_pipeline = Pipeline([
