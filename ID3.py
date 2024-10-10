@@ -34,12 +34,15 @@ class ID3:
         self.tree = None
     
     
-    def fit(self, X, y):
+    def fit(self, df):
         """
         Fonction pour construire l'arbre de décision à partir des données d'apprentissage.
         X: Ensemble d'attributs (Pandas DataFrame)
         y: Classes cibles (Pandas Series ou array-like)
         """
+        X = df.drop(self.nom_colonne_classe, axis=1)
+        y = df[self.nom_colonne_classe]
+
         # Appelle la méthode récursive pour construire l'arbre
         X = self.discretize(X, entrainement_en_cours=True)
         # Convertir les NaN en 'Valeur manquante'
@@ -127,16 +130,16 @@ class ID3:
         """
         X = X.copy()
         
-        # Séparer les colonnes selon leur type
+        # Sépare les colonnes selon leur type
         numeric_cols = X.select_dtypes(include=['float64', 'int64']).columns
         categorical_cols = X.select_dtypes(include=['object']).columns
         boolean_cols = X.select_dtypes(include=['bool']).columns
 
         if entrainement_en_cours:
-            # Création des pipelines pour chaque type de donnée
+            # Crée des pipelines pour chaque type de donnée
             numeric_pipeline = Pipeline([
                 ('imputer', SimpleImputer(strategy='mean')),  # Imputation des valeurs manquantes par la moyenne ## Réfléchir à une autre stratégie a passer en option
-                ('discretizer', KBinsDiscretizer(n_bins=2, encode='ordinal', strategy='uniform', subsample=None))  # Discrétisation # Proposer en option de choisir le nombre de bins et la stratégie
+                ('discretizer', KBinsDiscretizer(n_bins=10, encode='ordinal', strategy='uniform', subsample=None))  # Discrétisation # Proposer en option de choisir le nombre de bins et la stratégie
             ])
 
             categorical_pipeline = Pipeline([
@@ -147,14 +150,13 @@ class ID3:
                 ('imputer', SimpleImputer(strategy='most_frequent'))  # Imputation du mode
             ])
             
-            # Combiner les transformations en un seul pipeline global
+            # Combine les transformations en un seul pipeline global
             self.preprocessor = ColumnTransformer([
                 ('num', numeric_pipeline, numeric_cols),
                 ('cat', categorical_pipeline, categorical_cols),
                 ('bool', boolean_pipeline, boolean_cols)
             ])
-            
-            # Apprentissage du pipeline et transformation des données
+        
             X_transformed = self.preprocessor.fit_transform(X)
             
         else:
@@ -225,41 +227,3 @@ class ID3:
         return principaux_candidats
     
 
-# Test de la classe ID3
-arbre = ID3(depth_limit=100, nom_colonne_classe="Survived")
-#arbre = ID3( nom_colonne_classe="admission", seuil_gini=0.0001, seuil_discretisation=10)
-arbre.show_tree()
-
-df = pd.read_csv('titanic.csv')
-X = df.drop('Survived', axis=1)
-y = df['Survived']
-
-
-print(df.head(5))
-
-print('\n\n')
-
-print("Entraînement de l'arbre...")
-arbre.fit(X, y)
-print("Entraînement terminé.")
-
-print('\n\n')
-
-# Calculer l'accuracy
-predictions, chemins = arbre.predict(X)
-
-print("Prédictions: ", predictions[0:5])
-
-
-if y.dtype == 'object':
-    y = y.fillna('Etiquette manquante')
-else:
-    y = y.fillna(y.max() + 1)
-
-accuracy = np.mean(predictions == y)
-print("Accuracy: ", accuracy)
-
-print('\n\n')
-
-#print("Affichage de l'arbre:")
-#arbre.show_tree()
