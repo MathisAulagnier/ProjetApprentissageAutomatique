@@ -1,6 +1,8 @@
 # ToDo
 
-1. Revoir la méthode de post-élagage : Envisager de modifier l’algorithme afin de permettre la réutilisation d’un attribut déjà sélectionné comme meilleur candidat dans la construction de l’arbre de décision, si cela s’avère bénéfique pour le modèle.
+0. Placer des gardes fous : Ajouter des vérifications pour s’assurer que les données d’entraînement sont cohérentes et que les hyperparamètres sont correctement définis. (Par exemple, renvoyer une erreur si le nombre de bins est négatifs)
+
+1. Faire la méthode de post-élagage : Envisager de modifier l’algorithme afin de permettre la réutilisation d’un attribut déjà sélectionné comme meilleur candidat dans la construction de l’arbre de décision, si cela s’avère bénéfique pour le modèle.
 
 2. Implémenter une fonction de visualisation de l’arbre : Créer une fonction dédiée à l’affichage de l’arbre de décision final, permettant de visualiser la structure des décisions.
 
@@ -12,3 +14,4 @@
 
 6. S’assurer de la conformité avec les critères d’évaluation : Veiller à ce que le rendu final respecte les exigences définies dans la grille de notation ou de pénalités.
 
+7. Bonus : Copier certaine fonctionnalité dispo dans la librairie sklearn pour améliorer la classe ID3.
