@@ -98,8 +98,11 @@ class ID3:
                 tree[best_candidat][valeur] = self.build_tree(sous_ensemble.drop(columns=[best_candidat]), sous_ensemble_classes, depth+1)
         
         return tree
-    
-    def print_tree(self, level=0):
+    def print_tree(self):
+        tree_copy = self.copy()
+        tree_copy.print_tree_recursion()
+
+    def print_tree_recursion(self, level=0):
         """
         Affiche l'arbre construit.
         """
@@ -118,7 +121,7 @@ class ID3:
             print('\t'*level , key, "(key)")
             if isinstance(value, dict) and len(value)!=0: #si c'est une branche
                 self.tree = value
-                self.print_tree(level=level+1)
+                self.print_tree_recursion(level=level+1)
             else:
                 print('\t'*(level+1), value, "(value)") # si c'est une feuille de l'arbre
 
@@ -256,5 +259,8 @@ class ID3:
     
 
     def copy(self):
+        """
+        Copie de l'arbre
+        """
         copied_tree = copy.deepcopy(self)
         return copied_tree
