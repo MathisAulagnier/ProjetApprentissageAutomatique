@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import copy  # Pour deepcopy
 
 
 from sklearn.preprocessing import (
@@ -98,12 +99,28 @@ class ID3:
         
         return tree
     
-    def show_tree(self):
+    def print_tree(self, level=0):
         """
         Affiche l'arbre construit.
         """
-        print(self.tree)
+        # Vérifie si c'est bien un dictionnaire
+        if not isinstance(self.tree, dict):
+            print("self.tree n'est pas un dictionnaire.")
+            return
+        # Si l'arbre est nul, on arrête la fonction
+        if self.tree is None:
+            print("L'arbre n'a pas été construit.")
+            return
 
+        print("len: ", len(self.tree))
+        items = self.tree.items()
+        for key, value in items:
+            print('\t'*level , key, "(key)")
+            if isinstance(value, dict) and len(value)!=0: #si c'est une branche
+                self.tree = value
+                self.print_tree(level=level+1)
+            else:
+                print('\t'*(level+1), value, "(value)") # si c'est une feuille de l'arbre
 
 
     def predict(self, X):

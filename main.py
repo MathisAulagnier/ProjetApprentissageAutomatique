@@ -1,12 +1,14 @@
+import numpy
 import pandas as pd
 import numpy as np
 from ID3 import ID3
+from DecisionTreeVisualizer import DecisionTreeVisualizer
 
 
 # Test de la classe ID3
-arbre = ID3(depth_limit=3,nom_colonne_classe="variety")
+arbre = ID3(depth_limit=2,nom_colonne_classe="variety")
 #arbre = ID3( nom_colonne_classe="admission", seuil_gini=0.0001, seuil_discretisation=10)
-arbre.show_tree()
+#arbre.show_tree()
 
 df = pd.read_csv('Data/iris.csv')
 X = df.drop('variety', axis=1)
@@ -39,5 +41,12 @@ print("Accuracy: ", accuracy)
 
 print('\n\n')
 
-#print("Affichage de l'arbre:")
-#arbre.show_tree()
+print("reference:",arbre.tree, "\n")
+
+#arbre.print_tree()
+
+
+visualizer = DecisionTreeVisualizer(arbre.tree)
+visualizer.show_tree_graph()
+
+
