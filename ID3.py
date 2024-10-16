@@ -255,3 +255,6 @@ class ID3:
         return principaux_candidats
     
 
+    def copy(self):
+        copied_tree = copy.deepcopy(self)
+        return copied_tree

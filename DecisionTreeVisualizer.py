@@ -7,16 +7,13 @@ import copy
 class DecisionTreeVisualizer:
     def __init__(self, tree):
         self.tree = deepcopy(tree)
+        self.i=0
 
     def draw_tree(self, level, x, graph, pos, parent_name, width):
 
         # Vérifie si c'est bien un dictionnaire
         if not isinstance(self.tree, dict):
             print("self.tree n'est pas un dictionnaire.")
-            return
-        # Si l'arbre est nul, on arrête la fonction
-        if self.tree is None:
-            print("L'arbre n'a pas été construit.")
             return
 
         num_children = len(self.tree)
@@ -26,26 +23,29 @@ class DecisionTreeVisualizer:
         items = self.tree.items()
         for key, value in items:
             # Ajouter le niveau au nom du nœud pour le rendre unique
-            node_name = f"{key}\n{level}"
+            node_name = f"{key}"
 
-            #Ajouter le noeuf avec le parent
-            self.add_node(node_name, parent_name, next_x, level, graph, pos)
+            #Ajouter le noeud avec le parent
+            new_node_name = self.add_node(node_name, parent_name, next_x, level, graph, pos)
 
             if isinstance(value, dict):  # récursion pour placer les enfants
                 self.tree = value
                 self.draw_tree(level=level - 1, x=next_x, graph=graph,
-                               pos=pos, parent_name=node_name, width=dx)
+                               pos=pos, parent_name=new_node_name, width=dx)
             else:
                 #si c'est une feuille de l'arbre
-                leaf_name = f"{value}\n{level - 1}"
-                self.add_node(leaf_name, node_name, next_x, level-1, graph, pos)
+                leaf_name = f"{value}"
+                self.add_node(leaf_name, new_node_name, next_x, level-1, graph, pos)
             next_x += dx
 
 
     def add_node(self, leaf_name, parent_name, x_pos, y_pos, graph, pos):
+        leaf_name = leaf_name + "\n" + str(self.i)
         pos[leaf_name] = (x_pos, y_pos)
         graph.add_node(leaf_name)
         graph.add_edge(leaf_name, parent_name)
+        self.i+=1
+        return leaf_name
 
 
     def show_tree_graph(self):
@@ -64,7 +64,7 @@ class DecisionTreeVisualizer:
         print("pos", pos)
 
         # Dessiner le graphe avec networkx et matplotlib
-        plt.figure(figsize=(30,15))
+        plt.figure(figsize=(50,15))
         nx.draw(graph, pos, with_labels=True, node_size=3000, node_color='lightblue', font_size=10, font_weight='bold',
                 arrows=False)
         plt.show()

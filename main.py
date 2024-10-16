@@ -4,15 +4,15 @@ import numpy as np
 from ID3 import ID3
 from DecisionTreeVisualizer import DecisionTreeVisualizer
 
-
+nom_colonne_classe = "variety"
 # Test de la classe ID3
-arbre = ID3(depth_limit=2,nom_colonne_classe="variety")
+arbre = ID3(depth_limit=1,nom_colonne_classe=nom_colonne_classe)
 #arbre = ID3( nom_colonne_classe="admission", seuil_gini=0.0001, seuil_discretisation=10)
 #arbre.show_tree()
 
 df = pd.read_csv('Data/iris.csv')
-X = df.drop('variety', axis=1)
-y = df['variety']
+X = df.drop(nom_colonne_classe, axis=1)
+y = df[nom_colonne_classe]
 
 
 print(df.head(5))
@@ -43,7 +43,8 @@ print('\n\n')
 
 print("reference:",arbre.tree, "\n")
 
-#arbre.print_tree()
+arbre_copy = arbre.copy()
+arbre_copy.print_tree()
 
 
 visualizer = DecisionTreeVisualizer(arbre.tree)
