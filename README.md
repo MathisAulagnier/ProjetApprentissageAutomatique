@@ -6,7 +6,7 @@ Ce projet implémente l'algorithme ID3 pour la construction d'arbres de décisio
 
 - Mathis AULAGNIER - _AULM12040200_
 - Héléna BARBILLON - _BARH30530200_
-- Moise KUMAVI - _KUMM06100200_
+- Moise KUMAVI - _KUMM06100000_
 
 
 
