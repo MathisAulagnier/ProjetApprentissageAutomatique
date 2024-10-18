@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from id3 import ID3
+from ID3 import ID3
 
 
 # Test de la classe ID3
