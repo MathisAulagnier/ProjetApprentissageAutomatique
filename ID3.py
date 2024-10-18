@@ -23,7 +23,7 @@ from Predict_With_Trace import predict_with_trace
 
 
 class ID3:
-    def __init__(self, depth_limit=None, nom_colonne_classe='admission', seuil_gini=0.05, seuil_discretisation=10, number_bins=10):
+    def __init__(self, depth_limit=10, nom_colonne_classe='admission', seuil_gini=0.05, seuil_discretisation=10fit , number_bins=2):
         """
         Initialise l'arbre avec une limite de profondeur facultative.
         """
@@ -168,6 +168,9 @@ class ID3:
         numeric_cols = X.select_dtypes(include=['float64', 'int64']).columns
         categorical_cols = X.select_dtypes(include=['object']).columns
         boolean_cols = X.select_dtypes(include=['bool']).columns
+        
+        # Convertir les colonnes booléennes en entiers
+        X[boolean_cols] = X[boolean_cols].astype(int)
 
         if entrainement_en_cours:
             # Crée des pipelines pour chaque type de donnée

@@ -5,13 +5,13 @@ from sklearn.model_selection import train_test_split
 from ID3 import ID3
 from DecisionTreeVisualizer import DecisionTreeVisualizer
 
-nom_colonne_classe = "variety"
+nom_colonne_classe = "admission"
 
 # Test de la classe ID3
 arbre = ID3(depth_limit=None, nom_colonne_classe=nom_colonne_classe)
 
 # Chargement des données
-df = pd.read_csv('Data/iris.csv')
+df = pd.read_csv('Data/MBA.csv')
 X = df.drop(nom_colonne_classe, axis=1)
 y = df[nom_colonne_classe]
 
