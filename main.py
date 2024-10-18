@@ -21,7 +21,6 @@ X_train, X_val, y_train, y_val = train_test_split(X, y, test_size=0.2, random_st
 # Affichage des premières lignes du DataFrame
 print(df.head(5))
 
-print('\n\n')
 
 # Entraînement de l'arbre avec l'ensemble d'entraînement
 print("Entraînement de l'arbre...")
@@ -29,8 +28,6 @@ train_data = X_train.copy()
 train_data[nom_colonne_classe] = y_train
 arbre.fit(train_data)
 print("Entraînement terminé.")
-
-print('\n\n')
 
 # Calcul des prédictions et affichage des premières prédictions
 predictions, chemins = arbre.predict(X_train)
@@ -40,7 +37,6 @@ print("Prédictions (train): ", predictions[:5])
 accuracy_train = np.mean(predictions == y_train)
 print("Accuracy (train): ", accuracy_train)
 
-print('\n\n')
 
 # Affichage de l'arbre avant élagage
 #print("Arbre avant élagage:\n")
@@ -60,6 +56,6 @@ visualizer.show_tree_graph()
 # Prédictions et accuracy sur l'ensemble de validation après élagage
 predictions_val, chemins_val = arbre.predict(X_val)
 accuracy_val = np.mean(predictions_val == y_val)
-print("\n\nAccuracy (validation) après élagage: ", accuracy_val)
+print("Accuracy (validation) après élagage: ", accuracy_val)
 
 
