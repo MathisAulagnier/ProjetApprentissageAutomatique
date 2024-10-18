@@ -21,7 +21,7 @@ from sklearn.impute import (
 
 
 class ID3:
-    def __init__(self, depth_limit=None, nom_colonne_classe='admission', seuil_gini=0.05, seuil_discretisation=10, number_bins=10):
+    def __init__(self, depth_limit=10, nom_colonne_classe='admission', seuil_gini=0.05, seuil_discretisation=10 , number_bins=2):
         """
         Initialise l'arbre avec une limite de profondeur facultative.
         """
@@ -109,23 +109,23 @@ class ID3:
         """
         # Vérifie si c'est bien un dictionnaire
         if not isinstance(self.tree, dict):
-            print("self.tree n'est pas un dictionnaire.")
+            #print("self.tree n'est pas un dictionnaire.")
             return
         # Si l'arbre est nul, on arrête la fonction
         if self.tree is None:
-            print("L'arbre n'a pas été construit.")
+            #print("L'arbre n'a pas été construit.")
             return
 
-        print("len: ", len(self.tree))
+        #print("len: ", len(self.tree))
         items = self.tree.items()
         for key, value in items:
-            print('\t'*level , key, "(key)")
+            #print('\t'*level , key, "(key)")
             if isinstance(value, dict) and len(value)!=0: #si c'est une branche
                 self.tree = value
                 self.print_tree_recursion(level=level+1)
             else:
-                print('\t'*(level+1), value, "(value)") # si c'est une feuille de l'arbre
-
+                pass
+                #print('\t'*(level+1), value, "(value)") # si c'est une feuille de l'arbre
 
     def predict(self, X):
         """
@@ -147,7 +147,7 @@ class ID3:
                 else:
                     chemin.append(node)
                     predictions.append(None)
-                    print("Valeur inconnue, on peut ajouter une valeur par défaut ici")
+                    #print("Valeur inconnue, on peut ajouter une valeur par défaut ici")
                     break
             else:
                 chemin.append(node)
@@ -166,6 +166,9 @@ class ID3:
         numeric_cols = X.select_dtypes(include=['float64', 'int64']).columns
         categorical_cols = X.select_dtypes(include=['object']).columns
         boolean_cols = X.select_dtypes(include=['bool']).columns
+        
+        # Convertir les colonnes booléennes en entiers
+        X[boolean_cols] = X[boolean_cols].astype(int)
 
         if entrainement_en_cours:
             # Crée des pipelines pour chaque type de donnée
