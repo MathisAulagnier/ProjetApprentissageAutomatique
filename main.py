@@ -37,6 +37,15 @@ print("Prédictions (train): ", predictions[:5])
 accuracy_test = np.mean(predictions == y_val)
 print("Accuracy (test): ", accuracy_test)
 
+# Vérification des NaN dans y_val
+print(f"Nombre de NaN dans y_val : {y_val.isna().sum()}")
+
+# if y_val.isna().any():
+#     if y_val.dtype == 'object':
+#         y_val = y_val.fillna('Etiquette manquante')
+#     else:
+#         y_val = y_val.fillna(y_val.max() + 1)
+
 y_val = y_val.fillna('Etiquette manquante')
 print(y_val[:5])
 print(predictions[:5])
