@@ -19,8 +19,6 @@ from sklearn.impute import (
     SimpleImputer
 )
 
-from Predict_With_Trace import predict_with_trace
-
 
 class ID3:
     def __init__(self, depth_limit=None, nom_colonne_classe='admission', seuil_gini=0.05, seuil_discretisation=10, number_bins=10):
