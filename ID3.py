@@ -146,8 +146,9 @@ class ID3:
         categorical_cols = X.select_dtypes(include=['object']).columns
         boolean_cols = X.select_dtypes(include=['bool']).columns
         
-        boolean_cols = boolean_cols.astype('int')
-
+        # Convertir les colonnes booléennes en entiers
+        X[boolean_cols] = X[boolean_cols].astype(int)
+        
         if entrainement_en_cours:
             # Crée des pipelines pour chaque type de donnée
             numeric_pipeline = Pipeline([

@@ -4,13 +4,13 @@ from ID3 import ID3
 
 
 # Test de la classe ID3
-arbre = ID3(depth_limit=3,nom_colonne_classe="variety")
+arbre = ID3(depth_limit=3,nom_colonne_classe="admission")
 #arbre = ID3( nom_colonne_classe="admission", seuil_gini=0.0001, seuil_discretisation=10)
 arbre.show_tree()
 
-df = pd.read_csv('Data/iris.csv')
-X = df.drop('variety', axis=1)
-y = df['variety']
+df = pd.read_csv('Data/MBA.csv')
+X = df.drop('admission', axis=1)
+y = df['admission']
 
 
 print(df.head(5))
