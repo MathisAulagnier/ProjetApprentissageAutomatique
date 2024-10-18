@@ -8,7 +8,7 @@ from DecisionTreeVisualizer import DecisionTreeVisualizer
 nom_colonne_classe = "admission"
 
 # Test de la classe ID3
-arbre = ID3(depth_limit=None, nom_colonne_classe=nom_colonne_classe)
+arbre = ID3(depth_limit=5, nom_colonne_classe=nom_colonne_classe)
 
 # Chargement des données
 df = pd.read_csv('Data/MBA.csv')
@@ -30,12 +30,17 @@ arbre.fit(train_data)
 print("Entraînement terminé.")
 
 # Calcul des prédictions et affichage des premières prédictions
-predictions, chemins = arbre.predict(X_train)
+predictions, chemins = arbre.predict(X_val)
 print("Prédictions (train): ", predictions[:5])
 
 # Calcul de l'accuracy sur l'ensemble d'entraînement
-accuracy_train = np.mean(predictions == y_train)
-print("Accuracy (train): ", accuracy_train)
+accuracy_test = np.mean(predictions == y_val)
+print("Accuracy (test): ", accuracy_test)
+
+y_val = y_val.fillna('Etiquette manquante')
+print(y_val[:5])
+print(predictions[:5])
+
 
 
 # Affichage de l'arbre avant élagage

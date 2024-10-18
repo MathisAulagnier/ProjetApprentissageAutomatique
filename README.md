@@ -1,59 +1,107 @@
-# TP1 - Fondamentaux de l'apprentissage automatique 8INF867
+# Classe ID3 pour Arbre de Décision
 
-Ce projet implémente l'algorithme ID3 pour la construction d'arbres de décision. Il inclut également des tests unitaires pour vérifier le bon fonctionnement de l'implémentation.
+## Description
 
-## Membres du groupe projet
+Ce fichier README explique l'implémentation et l'utilisation de la classe ID3, un classifieur d'arbre de décision personnalisé pour les données catégorielles.
+Prérequis
 
-- Mathis AULAGNIER - _AULM12040200_
-- Héléna BARBILLON - _BARH30530200_
-- Moise KUMAVI - _KUMM06100200_
-
-
-
-## Structure du Workspace
-
-```sh
-.
-├── Data # Dossier contenant les données utilisées pour les tests
-│   ├── MBA.csv
-│   ├── iris.csv
-│   └── titanic.csv
-├── README.md
-├── Travail Pratique.pdf #Sujet du projet
-├── __init__.py
-├── id3.py # Implémentation de l'algorithme ID3
-├── DecisionTreeVisulizer.py # Pour afficher l'arbre graphiquement
-├── main.py
-└── tests
-    ├── __init__.py
-    ├── ...
-    └── tests_init.py
-```
-
-### Détails des Fichiers
-
-- **id3.py** : Ce fichier contient l'implémentation de l'algorithme ID3 pour la construction d'arbres de décision.
-
-- **DecisionTreeVisualizer.py** : Ce fichier contient un classe permettant d'afficher l'arbre dans un graphique après sa construction.
-
-- **tests/** : Ce répertoire contient les tests unitaires pour vérifier le bon fonctionnement de l'algorithme ID3.
-
-- **data/** : Ce répertoire contient les jeux de données utilisés pour entraîner et tester l'algorithme ID3.
-
-- **requirements.txt** : Liste des dépendances Python nécessaires pour exécuter le projet.
+1. Python 3.x
+2. Packages : pandas, numpy, scikit-learn
 
 ## Installation
 
-Pour installer les dépendances nécessaires, exécutez la commande suivante :
+Pour installer les dépendances requises, exécutez :
 
 ```sh
-pip install -r requirements.txt
+
+pip install pandas numpy scikit-learn
 ```
 
-## Exécution des Tests
-Pour exécuter les tests unitaires, utilisez la commande suivante :
+Alternativement, créez et activez un environnement virtuel pour gérer les dépendances :
+
 ```sh
-python -m unittest discover -s tests
+
+# Créer un environnement virtuel
+python -m venv env
+
+# Activer l'environnement virtuel (Windows)
+env\Scripts\activate
+
+# Activer l'environnement virtuel (macOS/Linux)
+source env/bin/activate
+
+# Installer les dépendances
+pip install pandas numpy scikit-learn
 ```
 
+Initialisation de la Classe
 
+```python
+
+from id3 import ID3
+
+# Exemple d'initialisation
+model = ID3(depth_limit=5, nom_colonne_classe='admission', seuil_gini=0.05, seuil_discretisation=10, number_bins=10)
+```
+Paramètres
+- depth_limit : Profondeur maximale de l'arbre.
+- nom_colonne_classe : Nom de la colonne cible dans le dataset.
+- seuil_gini : Seuil d'impureté de Gini pour la division des nœuds.
+- seuil_discretisation : Seuil pour la discrétisation des données.
+- number_bins : Nombre de bins pour discrétiser les caractéristiques continues.
+
+Méthodes
+
+1. fit(df)
+
+Construit l'arbre de décision à partir des données d'apprentissage.
+Paramètres :
+    df : DataFrame Pandas contenant les données d'apprentissage, y compris la colonne cible.
+Utilisation :
+```python
+model.fit(training_data)
+predict(X)
+```
+
+Prédit les étiquettes de classe pour de nouvelles instances en utilisant l'arbre construit.
+Paramètres : X : DataFrame Pandas contenant les données de test.
+Retourne :predictions : Liste des étiquettes de classe prédites.
+chemin : Liste des chemins de décision.
+Utilisation :
+```python
+predictions, chemin = model.predict(test_data)
+```
+
+## Exemple d'Utilisation
+
+```python
+
+import pandas as pd
+from sklearn.model_selection import train_test_split
+
+# Charger vos données dans un DataFrame Pandas
+df = pd.read_csv('Data/MBA.csv')
+
+# Séparer les données en ensembles d'entraînement et de test (80/20)
+train_df, test_df = train_test_split(df, test_size=0.2, random_state=42)
+
+# Initialiser le modèle ID3
+model = ID3(depth_limit=5, nom_colonne_classe='admission', seuil_gini=0.05, seuil_discretisation=10, number_bins=10)
+
+# Entraîner le modèle sur les données d'apprentissage
+model.fit(train_df)
+
+# Faire des prédictions sur le dataset de test
+predictions, chemin = model.predict(test_df.drop(columns=['admission']))
+
+```
+
+## Notes
+
+- Assurez-vous que la colonne cible est de type object dans votre DataFrame.
+- La méthode predict retourne un tuple contenant les prédictions et les chemins de décision.
+- La méthode prune est un placeholder et n'est actuellement pas implémentée.
+
+## Conclusion
+
+La classe ID3 offre une implémentation personnalisable de l'algorithme d'arbre de décision ID3, capable de gérer les valeurs manquantes et de discrétiser les caractéristiques continues.

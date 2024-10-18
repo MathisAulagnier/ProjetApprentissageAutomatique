@@ -23,7 +23,7 @@ from Predict_With_Trace import predict_with_trace
 
 
 class ID3:
-    def __init__(self, depth_limit=10, nom_colonne_classe='admission', seuil_gini=0.05, seuil_discretisation=10fit , number_bins=2):
+    def __init__(self, depth_limit=10, nom_colonne_classe='admission', seuil_gini=0.05, seuil_discretisation=10 , number_bins=2):
         """
         Initialise l'arbre avec une limite de profondeur facultative.
         """
