@@ -19,6 +19,8 @@ from sklearn.impute import (
     SimpleImputer
 )
 
+from Predict_With_Trace import predict_with_trace
+
 
 class ID3:
     def __init__(self, depth_limit=None, nom_colonne_classe='admission', seuil_gini=0.05, seuil_discretisation=10, number_bins=10):
@@ -35,7 +37,6 @@ class ID3:
         self.num_bins = number_bins
         self.tree = None
     
-    
     def fit(self, df):
         """
         Fonction pour construire l'arbre de décision à partir des données d'apprentissage.
@@ -50,8 +51,10 @@ class ID3:
         if df[self.nom_colonne_classe].dtype != 'object':
             raise ValueError("ERREUR : La colonne candidate pour être le Label n'est pas de type 'object'.")
 
-        X = df.drop(self.nom_colonne_classe, axis=1)
-        y = df[self.nom_colonne_classe]
+        # X = df.drop(self.nom_colonne_classe, axis=1)
+        # y = df[self.nom_colonne_classe]
+        X = df.drop(self.nom_colonne_classe, axis=1).reset_index(drop=True)  # Réinitialise les index
+        y = df[self.nom_colonne_classe].reset_index(drop=True)  # Réinitialise les index
 
         # Appelle la méthode récursive pour construire l'arbre
         X = self.discretize(X, entrainement_en_cours=True)
@@ -87,8 +90,8 @@ class ID3:
         
         # Séparer le dataframe en sous-ensembles dépendant des valeurs de l'attribut choisi
         for valeur in np.unique(X[best_candidat]):
-            sous_ensemble = X[X[best_candidat] == valeur]
-            sous_ensemble_classes = y[X[best_candidat] == valeur]
+            sous_ensemble = X[X[best_candidat] == valeur].reset_index(drop=True)
+            sous_ensemble_classes = y[X[best_candidat] == valeur].reset_index(drop=True)
             
             # Si le sous-ensemble est vide, retourner la classe majoritaire
             if len(sous_ensemble_classes) == 0:
@@ -197,16 +200,56 @@ class ID3:
         X_transformed = pd.DataFrame(X_transformed, columns=numeric_cols.tolist() + categorical_cols.tolist() + boolean_cols.tolist())
         
         return X_transformed
-    
 
-    
 
-    def prune(self):
+    def prune(self, X_val, y_val):
         """
         Applique un élagage postérieur (post-pruning) sur l'arbre.
         """
-        # Implémente la méthode de post-pruning choisie
-        pass
+        X_val = self.discretize(X_val, entrainement_en_cours=False)
+
+        def recursive_prune(node, X_val, y_val):
+            # Si on est à une feuille, on retourne la classe actuelle
+            if not isinstance(node, dict):
+                return node
+
+            # Sinon, nous sommes à un noeud interne
+            attribut = list(node.keys())[0]
+            sous_noeuds = node[attribut]
+
+            # Réinitialisation des index de X_val et y_val pour les aligner
+            X_val_reset = X_val.reset_index(drop=True)
+            y_val_reset = y_val.reset_index(drop=True)
+
+            # Parcourir les sous-arbres pour les élaguer
+            for valeur, sous_arbre in sous_noeuds.items():
+                indices = X_val_reset[attribut] == valeur
+
+                X_val_subset = X_val_reset.loc[indices]
+                y_val_subset = y_val_reset.loc[indices]
+
+                if len(X_val_subset) > 0:
+                    sous_noeuds[valeur] = recursive_prune(
+                        sous_arbre,
+                        X_val_subset,
+                        y_val_subset
+                    )
+
+            # Après avoir parcouru les enfants, on verifie si l'on doit élaguer ce noeud
+            predictions = []
+            for valeur, sous_arbre in sous_noeuds.items():
+                if isinstance(sous_arbre, dict):
+                    return node  # Garder le noeud si un enfant est encore un sous-arbre
+                predictions.append(sous_arbre)
+
+            # Si toutes les feuilles prédisent la même classe, on peut élaguer
+            if len(set(predictions)) == 1:
+                return predictions[0]
+
+            return node
+
+        # Commencer l'élagage depuis la racine
+        self.tree = recursive_prune(self.tree, X_val, y_val)
 
     def gini(self, y):
         """
