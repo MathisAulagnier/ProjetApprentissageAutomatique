@@ -145,6 +145,8 @@ class ID3:
         numeric_cols = X.select_dtypes(include=['float64', 'int64']).columns
         categorical_cols = X.select_dtypes(include=['object']).columns
         boolean_cols = X.select_dtypes(include=['bool']).columns
+        
+        boolean_cols = boolean_cols.astype('int')
 
         if entrainement_en_cours:
             # Crée des pipelines pour chaque type de donnée
