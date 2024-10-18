@@ -25,7 +25,7 @@ class DecisionTreeVisualizer:
         """
         # Vérifie si c'est bien un dictionnaire
         if not isinstance(self.tree, dict):
-            print("self.tree n'est pas un dictionnaire.")
+            #print("self.tree n'est pas un dictionnaire.")
             return
 
         num_children = len(self.tree)

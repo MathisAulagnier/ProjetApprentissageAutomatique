@@ -111,23 +111,23 @@ class ID3:
         """
         # Vérifie si c'est bien un dictionnaire
         if not isinstance(self.tree, dict):
-            print("self.tree n'est pas un dictionnaire.")
+            #print("self.tree n'est pas un dictionnaire.")
             return
         # Si l'arbre est nul, on arrête la fonction
         if self.tree is None:
-            print("L'arbre n'a pas été construit.")
+            #print("L'arbre n'a pas été construit.")
             return
 
-        print("len: ", len(self.tree))
+        #print("len: ", len(self.tree))
         items = self.tree.items()
         for key, value in items:
-            print('\t'*level , key, "(key)")
+            #print('\t'*level , key, "(key)")
             if isinstance(value, dict) and len(value)!=0: #si c'est une branche
                 self.tree = value
                 self.print_tree_recursion(level=level+1)
             else:
-                print('\t'*(level+1), value, "(value)") # si c'est une feuille de l'arbre
-
+                pass
+                #print('\t'*(level+1), value, "(value)") # si c'est une feuille de l'arbre
 
     def predict(self, X):
         """
@@ -149,7 +149,7 @@ class ID3:
                 else:
                     chemin.append(node)
                     predictions.append(None)
-                    print("Valeur inconnue, on peut ajouter une valeur par défaut ici")
+                    #print("Valeur inconnue, on peut ajouter une valeur par défaut ici")
                     break
             else:
                 chemin.append(node)

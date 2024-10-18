@@ -43,14 +43,14 @@ print("Accuracy (train): ", accuracy_train)
 print('\n\n')
 
 # Affichage de l'arbre avant élagage
-print("Arbre avant élagage:\n")
+#print("Arbre avant élagage:\n")
 arbre.print_tree()
 
 # Application de l'élagage postérieur avec l'ensemble de validation
 arbre.prune(X_val, y_val)
 
 # Affichage de l'arbre après élagage
-print("\n\nArbre après élagage:\n")
+#print("\n\nArbre après élagage:\n")
 arbre.print_tree()
 
 # Visualisation de l'arbre après élagage
